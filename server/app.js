@@ -1,0 +1,41 @@
+const express = require('express')
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+const passport = require('passport')
+const passportStrategy = require('./middleware/passport-strategy')
+const authRoutes = require('./routes/auth.routes')
+const postRoutes = require('./routes/post.routes')
+const commentRoutes = require('./routes/comment.routes')
+const companyRoutes = require('./routes/company.routes')
+const branchRoutes = require('./routes/branch.routes')
+const departmentRoutes = require('./routes/department.routes')
+const productRoutes = require('./routes/product.routes')
+const personRoutes = require('./routes/person.routes')
+const statusRoutes = require('./routes/status.routes')
+const managementRoutes = require('./routes/management.routes')
+const keys = require('./keys')
+const app = express()
+
+
+mongoose.connect(keys.MONGO_URI)
+	.then(() => console.log('MongoDB connected...'))
+	.catch(error => console.error(error))
+
+app.use(passport.initialize())
+passport.use(passportStrategy)
+
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+
+app.use('/api/auth', authRoutes)
+app.use('/api/post', postRoutes)
+app.use('/api/comment', commentRoutes)
+app.use('/api/company', companyRoutes)
+app.use('/api/branch', branchRoutes)
+app.use('/api/department', departmentRoutes)
+app.use('/api/product', productRoutes)
+app.use('/api/person', personRoutes)
+app.use('/api/status', statusRoutes)
+app.use('/api/management', managementRoutes)
+
+module.exports = app
